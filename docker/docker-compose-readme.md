@@ -50,13 +50,6 @@ docker volume create gogs-volume
 2. Import GIT Data from Github repository
 
 
-Build all projects
-------------------
-```
-mvn clean install -f /home/john/Projects/mcsvc/mcsvc-infra-eureka-service/pom.xml &
-mvn clean install -f /home/john/Projects/mcsvc/mcsvc-infra-config-service/pom.xml &
-mvn clean install -f /home/john/Projects/mcsvc/mcsvc-util-constants-service/pom.xml &
-```
 
 
 
