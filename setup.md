@@ -10,6 +10,7 @@ Setup
 |TPP Infrastructure        |
 |MariaDB|172.19.0.2| 3306| |
 |Gogs   |172.19.0.3| 22 & 3000|http://172.19.0.3:3000|
+|Elastic Search   |172.19.0.4| 9300|http://172.19.0.4:9300|
 |Infra Services             |
 |Eureka1 |172.19.0.10|8761|http://172.19.0.10:8761|
 |Zuul TODO|172.19.0.12|-|-|
