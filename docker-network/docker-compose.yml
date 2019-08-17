@@ -1,0 +1,78 @@
+#######################################################################################################################
+#                                                                                                                     #
+#                             SETUP OF MCSVC Microservices                                                            #
+#                                                                                                                     #
+#    BEFORE USE SETUP Volumes and Networks and Initialize GOGS as described in docker-compose-readme.md               #
+#                                                                                                                     #
+#######################################################################################################################
+
+version: '3'
+services:
+  gogs:
+    container_name: gogs
+    image: gogs/gogs:latest
+    volumes:
+      - gogs-data:/data
+    networks:
+      mcsvc_net:
+        ipv4_address: "172.19.0.3"
+
+  mcsvc-infra-eureka-service:
+    container_name: mcsvc-infra-eureka-service
+    image: jbprek/mcsvc-infra-eureka-service:latest
+    networks:
+      mcsvc_net:
+        ipv4_address: "172.19.0.10"
+    environment:
+      - MCSVC_EUREKA_HOST_1
+      - MCSVC_EUREKA_HOST_1_URL
+
+  mcsvc-infra-admin-service:
+    container_name: mcsvc-infra-admin-service
+    image: jbprek/mcsvc-infra-admin-service:latest
+    depends_on:
+      - mcsvc-infra-eureka-service
+    networks:
+      mcsvc_net:
+        ipv4_address: "172.19.0.22"
+    environment:
+      - MCSVC_EUREKA_HOST_1_URL
+
+  mcsvc-infra-config-service:
+    container_name: mcsvc-infra-config-service
+    image: jbprek/mcsvc-infra-config-service:latest
+    depends_on:
+      - gogs
+      - mcsvc-infra-eureka-service
+      - mcsvc-infra-admin-service
+    networks:
+      mcsvc_net:
+        ipv4_address: "172.19.0.20"
+    environment:
+      - MCSVC_EUREKA_HOST_1_URL
+      - MCSVC_CONFIG_GIT_URL
+      - MCSVC_CONFIG_GIT_USERNAME
+      - MCSVC_CONFIG_GIT_PASSWORD
+
+  mcsvc-util-constants-service:
+    container_name: mcsvc-util-constants-service
+    image: jbprek/mcsvc-util-constants-service:latest
+    depends_on:
+      - mcsvc-infra-eureka-service
+      - mcsvc-infra-admin-service
+      - mcsvc-infra-config-service
+    networks:
+      mcsvc_net:
+        ipv4_address: "172.19.0.50"
+    environment:
+      - MCSVC_EUREKA_HOST_1_URL
+
+
+volumes:
+  gogs-data:
+    external: true
+
+networks:
+  mcsvc_net:
+    external: true
+
